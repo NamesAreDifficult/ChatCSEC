@@ -43,11 +43,16 @@
         }
 
         #chat-display {
-            width: 100%; /* Ensures it fills the width of its container */
-            height: 100%; /* Ensures it fills the height of its container */
-            flex-grow: 1; /* Allows it to expand to fill available space in flex container */
-            overflow-y: auto; /* Adds vertical scroll if content overflows */
-            padding: 20px; /* Adds some padding inside the chat display */
+            position: fixed;
+            top: 0; /* Aligns the top of #chat-display with the top of the viewport */
+            bottom: 0; /* Aligns the bottom of #chat-display with the bottom of the viewport */
+            right: 0; /* Aligns the right side of #chat-display with the right side of the viewport */
+            left: 250px; /* Assuming #chat-list is 250px wide, this aligns the left side of #chat-display right next to #chat-list */
+            overflow-y: auto; /* Allows scrolling within the chat display if content overflows vertically */
+            padding: 10px;
+            box-sizing: border-box; /* Ensures padding is included in the width and height calculations */
+            background-color: white; /* Or any color that fits your design */
+            box-shadow: -2px 0 5px rgba(0,0,0,0.1); /* Optional: adds shadow for depth on the left edge */
         }
 
         .chat-response {
