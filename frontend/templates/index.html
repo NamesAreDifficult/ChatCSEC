@@ -5,20 +5,34 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Chat with AI</title>
     <style>
-        body{
-            height: 100%;
+        nav {
+            width: 100%;
+            background-color: #48a770; /* Choose a color that fits your design */
+            color: white;
+            padding: 10px 20px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 1000; /* Ensures nav is always on top */
+        }
+        body {
             margin: 0;
             display: flex;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background-color: #f4f7f6;
+            
+            padding-top: 50px;
         }
 
         #chat-list {
-            flex: 0 0 250px;
+            top: 50px;
+            flex: 0 0 250px; /* Fixed width */
             background-color: #fff;
             overflow-y: auto;
+            height: calc(100vh - 75px); /* Full viewport height */
             padding: 10px;
-            height: 100vh;
+            /* padding-top: 0px; */
             box-shadow: 2px 0 5px rgba(0,0,0,0.1);
         }
 
@@ -36,34 +50,30 @@
         }
 
         #new-chat {
-            width: calc(100% - 20px);
             background-color: #48a770;
             color: white;
             border: none;
+            cursor: pointer;
         }
 
         #chat-display {
             position: fixed;
-            top: 0; /* Aligns the top of #chat-display with the top of the viewport */
-            bottom: 0; /* Aligns the bottom of #chat-display with the bottom of the viewport */
-            right: 0; /* Aligns the right side of #chat-display with the right side of the viewport */
-            left: 250px; /* Assuming #chat-list is 250px wide, this aligns the left side of #chat-display right next to #chat-list */
-            overflow-y: auto; /* Allows scrolling within the chat display if content overflows vertically */
+            top: 50px;
+            bottom: 0;
+            right: 0;
+            left: 260px; /* Adjust based on the width of #chat-list */
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
             padding: 10px;
-            box-sizing: border-box; /* Ensures padding is included in the width and height calculations */
-            background-color: white; /* Or any color that fits your design */
-            box-shadow: -2px 0 5px rgba(0,0,0,0.1); /* Optional: adds shadow for depth on the left edge */
+            box-sizing: border-box;
+            background-color: white;
         }
 
-        .chat-response {
-            background-color: #fff;
-            border: none;
-            padding: 10px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-            margin-bottom: 10px;
+        #messages-container {
             overflow-y: auto;
-            max-height: 300px;
-            border-radius: 5px;
+            margin-bottom: 10px;
+            flex-grow: 1;
         }
 
         .chat-form {
@@ -71,20 +81,22 @@
             margin-top: 10px;
         }
 
+        .chat-form input, .chat-form button {
+            height: 40px;
+            padding: 0 10px;
+        }
+
         .chat-form input {
             flex-grow: 1;
-            padding: 10px;
             border: 1px solid #ccc;
             border-radius: 5px 0 0 5px;
             border-right: none;
         }
 
         .chat-form button {
-            width: 20%;
             background-color: #48a770;
             color: white;
             border: none;
-            padding: 10px;
             cursor: pointer;
             border-radius: 0 5px 5px 0;
             transition: background-color 0.3s ease;
@@ -96,46 +108,47 @@
     </style>
 </head>
 <body>
-    <div id="chat-list"></div>
-    <div id="chat-display">Select a chat from the left.</div>
+    <nav>
+        <a href="/about">About</a>
+    </nav>
+    <div id="chat-list">
+        <button id="new-chat">Start New Chat</button>
+    </div>
+    <div id="chat-display">
+        <div id="messages-container">
+            <!-- Messages will be dynamically inserted here -->
+        </div>
+        <form id="chat-form" class="chat-form">
+            <input type="text" class="user_input" placeholder="Type your message...">
+            <button type="submit">Send</button>
+        </form>
+    </div>
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script>
         $(document).ready(function(){
             let chatCount = 0;
-            $('#chat-list').on('click', '.chat-selector', function(){
-                const chatId = $(this).data('chat-id');
-                $('.chat-box').hide();
-                $(`#chat-box-${chatId}`).show();
-            });
-
-            $('#chat-list').append('<button id="new-chat">Start New Chat</button>');
             $('#new-chat').click(function() {
                 chatCount++;
                 const chatSelector = `<div class="chat-selector" data-chat-id="${chatCount}">Chat #${chatCount}</div>`;
                 $('#chat-list').append(chatSelector);
 
-                const chatBox = `
-                    <div class="chat-box" id="chat-box-${chatCount}" style="display:none">
-                        <div class="chat-response" id="response-${chatCount}"></div>
-                        <form class="chat-form" data-chat-id="${chatCount}">
-                            <input type="text" class="user_input" placeholder="Type your message...">
-                            <button type="submit">Send</button>
-                        </form>
-                    </div>
-                `;
-                $('#chat-display').append(chatBox);
+                // Resetting the chat display to show the selected chat
+                $('#messages-container').empty();
+                $('#messages-container').append(`<div class="chat-box" id="chat-box-${chatCount}">
+                                                    <div class="chat-response" id="response-${chatCount}">Chat #${chatCount} initiated</div>
+                                                </div>`);
             });
 
-            $(document).on('submit', '.chat-form', function(e){
+            $(document).on('submit', '#chat-form', function(e){
                 e.preventDefault();
-                const chatId = $(this).data('chat-id');
                 const userInput = $(this).find('.user_input').val();
-
-                // Implement sending to backend here
                 
-                $(`#response-${chatId}`).append(`<div>Sent: ${userInput}</div>`); // Simulate response
-                $(this).find('.user_input').val('');
+                // Example of appending user input to messages container
+                $('#messages-container').append(`<div>Sent: ${userInput}</div>`);
+                
+                // Clear input after sending
+                $('.user_input').val('');
             });
         });
     </script>
