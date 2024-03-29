@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat with AI</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: flex-end;
+            height: 100vh;
+            background-color: #f0f0f0;
+        }
+        #chat-box {
+            width: 300px;
+            border: 1px solid #ddd;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+            display: flex;
+            flex-direction: column;
+        }
+        #chat-header {
+            background-color: #007bff;
+            color: white;
+            padding: 10px;
+            border-radius: 8px 8px 0 0;
+            text-align: center;
+        }
+        #chat-form {
+            display: flex;
+            border-top: 1px solid #ddd;
+        }
+        #user_input {
+            flex-grow: 1;
+            border: none;
+            padding: 10px;
+            border-radius: 0 0 0 8px;
+        }
+        #chat-form button {
+            border: none;
+            background-color: #007bff;
+            color: white;
+            padding: 10px;
+            border-radius: 0 0 8px 0;
+            cursor: pointer;
+        }
+        #response {
+            padding: 10px;
+            height: 200px;
+            overflow-y: auto;
+            flex-grow: 1;
+        }
+    </style>
+</head>
+<body>
+    <nav style="position: fixed; top: 0; width: 100%; background-color: #f0f0f0; padding: 10px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); text-align: center;">
+        <a href="/about" style="text-decoration: none; color: #007bff;">About</a>
+    </nav>
+    <div id="chat-box">
+        <div id="chat-header">ChatCSEC</div>
+        <div id="response">Your chat history will appear here...</div>
+        <form id="chat-form">
+            <input type="text" id="user_input" name="user_input" placeholder="Ask something..." required>
+            <button type="submit">Send</button>
+        </form>
+    </div>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script>
+        $(document).ready(function(){
+            $('#chat-form').on('submit', function(e){
+                e.preventDefault(); // Prevent the form from submitting via the browser
+                $.ajax({
+                    url: '/',
+                    method: 'POST',
+                    contentType: 'application/json',
+                    data: JSON.stringify({ user_input: $('#user_input').val() }),
+                    success: function(response){
+                        $('#response').append('<div>' + response.response + '</div>');
+                        $('#user_input').val(''); // Clear input after sending
+                        $('#response').scrollTop($('#response')[0].scrollHeight); // Scroll to the bottom
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
