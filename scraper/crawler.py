@@ -61,7 +61,7 @@ class Crawler(ICrawler):
             handlers[contentType].findLinks(content, local_domain, seen, queue, depth, baseDirectory)
 
     @staticmethod
-    def crawl(url: str, maxDepth: int,baseDirectory: list[str] = None, cores: int = 2,
+    def crawl(url: str, maxDepth: int, baseDirectory: list[str] = None, cores: int = 2,
               outputDirectory: str = os.path.dirname(os.path.realpath(__file__)),
               urlRegexString: str=None, contentRegexString: str=None, matchSkip: bool=False) -> set:
         if urlRegexString:
