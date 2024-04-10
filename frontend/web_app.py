@@ -1,14 +1,33 @@
 from flask import Flask, render_template, request, jsonify
+#from database.DBInterface import iDB
+from database.QDrantDB import QDrantDB
+#from embed.embedInterface import iEmbed
+from embed.openAIEmbed import OpenAIEmbed
+#from model.modelInterface import iModel
+from model.GPT import GPT
+import sys
 
 app = Flask(__name__)
 
 @app.route('/', methods=['GET', 'POST'])
 def home():
+    db = QDrantDB("129.21.21.11")
+    embed = OpenAIEmbed
+    model = GPT("You are an advanced subject matter expert on the field of cybersecurity", "gpt-4-turbo-preview")
+
     if request.method == 'POST':
-        user_input = request.form['user_input']
-        # Here, you would process the user_input with your AI model and generate a response
-        response = "This is where the AI response would go for: " + user_input
-        return jsonify({'response': response})
+        prompt = request.form['user_input']
+
+        promptEmbedding = list(embed.createEmbedding(prompt,
+                                                 maxChunkSize=sys.maxsize,
+                                                 chunkOverlap=0,
+                                                 delimiter="\n"*50).values())[0]
+
+        promptResults = db.queryDB(promptEmbedding, collectionNames=["CLITesting"], maxHits=50)
+        promptResponse = model.prompt(promptResults, prompt)
+
+        # response = "This is where the AI response would go for: " + prompt
+        return jsonify({'response': promptResponse})
     return render_template('index.html')
 
 @app.route('/about')
