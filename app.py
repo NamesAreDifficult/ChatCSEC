@@ -6,6 +6,7 @@ from model.modelInterface import iModel
 from model.GPT import GPT
 from scraper.iCrawler import ICrawler
 from scraper.crawler import Crawler
+from frontend import web_app
 
 import os
 import sys
@@ -52,7 +53,8 @@ def run(db: iDB, embed: iEmbed, model: iModel, crawler: ICrawler):
     print(f"Prompt Response:\n{promptResponse}\nHyde Response:\n{hydeResponse}")
 
 if __name__ == "__main__":
-    run(QDrantDB("129.21.21.11"),
-        OpenAIEmbed,
-        GPT("You are an advanced subject matter expert on the field of cybersecurity", "gpt-4-turbo-preview"),
-        Crawler)
+    #run(QDrantDB("129.21.21.11"),
+    #    OpenAIEmbed,
+    #    GPT("You are an advanced subject matter expert on the field of cybersecurity", "gpt-4-turbo-preview"),
+    #    Crawler)
+    web_app.run()

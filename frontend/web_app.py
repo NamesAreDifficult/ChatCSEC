@@ -34,5 +34,10 @@ def home():
 def about():
     return render_template('about.html')
 
-if __name__ == '__main__':
+
+def run():
     app.run(debug=True)
+
+
+if __name__ == '__main__':
+    run()
