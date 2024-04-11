@@ -25,7 +25,7 @@ def home():
                                                  chunkOverlap=0,
                                                  delimiter="\n"*50).values())[0]
 
-        promptResults = db.queryDB(promptEmbedding, collectionNames=["CLITesting"], maxHits=50)
+        promptResults = db.queryDB(promptEmbedding, collectionNames=["FakeReportsChunked"], maxHits=5)
         promptResponse = model.prompt(promptResults, prompt)
 
         # response = "This is where the AI response would go for: " + prompt
