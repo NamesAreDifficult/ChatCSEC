@@ -16,6 +16,7 @@ def home():
     model = GPT("You are an advanced subject matter expert on the field of cybersecurity", "gpt-4-turbo-preview")
 
     if request.method == 'POST':
+        #This is where the data comes in
         data = request.json
         prompt = data['user_input']
 
@@ -33,6 +34,7 @@ def home():
 
 @app.route('/about')
 def about():
+    #TODO: Make this page better
     return render_template('about.html')
 
 
