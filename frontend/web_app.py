@@ -1,7 +1,7 @@
 from flask import Flask, render_template, request, jsonify
 #from database.DBInterface import iDB
 from database.QDrantDB import QDrantDB
-#from embed.embedInterface import iEmbed
+#from embed.embedInterface import iEmbed0
 from embed.openAIEmbed import OpenAIEmbed
 #from model.modelInterface import iModel
 from model.GPT import GPT
