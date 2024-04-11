@@ -16,8 +16,8 @@ def home():
     model = GPT("You are an advanced subject matter expert on the field of cybersecurity", "gpt-4-turbo-preview")
 
     if request.method == 'POST':
-        #putting new changes here
-        prompt = request.form['user_input']
+        data = request.json
+        prompt = data['user_input']
 
         promptEmbedding = list(embed.createEmbedding(prompt,
                                                  maxChunkSize=sys.maxsize,
