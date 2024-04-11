@@ -5,3 +5,4 @@ scraper/processed
 scraper/test
 */__pycache__/*
 *data*
+.env
