@@ -24,13 +24,30 @@ def home():
                                                  maxChunkSize=sys.maxsize,
                                                  chunkOverlap=0,
                                                  delimiter="\n"*50).values())[0]
+        hydeResponse = model.hydePrompt(prompt)
+        hydeEmbedding = list(embed.createEmbedding(hydeResponse,
+                                                    maxChunkSize=sys.maxsize,
+                                                    chunkOverlap=0,
+                                                    delimiter="\n"*50).values())[0]
 
-        promptResults = db.queryDB(promptEmbedding, collectionNames=["CLITesting"], maxHits=50)
+        promptResults = db.queryDB(promptEmbedding, collectionNames=["InitialTesting"], maxHits=50)
         promptResponse = model.prompt(promptResults, prompt)
+        hydeResults = db.queryDB(hydeEmbedding, collectionNames=["InitialTesting"], maxHits=50)
+        hydeResponse = model.prompt(hydeResults, prompt)
+
+        # promptEmbedding = list(embed.createEmbedding(prompt,
+        #                                          maxChunkSize=sys.maxsize,
+        #                                          chunkOverlap=0,
+        #                                          delimiter="\n"*50).values())[0]
+
+        # promptResults = db.queryDB(promptEmbedding, collectionNames=["CLITesting"], maxHits=50)
+        # promptResponse = model.prompt(promptResults, prompt)
 
         # response = "This is where the AI response would go for: " + prompt
         return jsonify({'response': promptResponse})
     return render_template('index.html')
+
+
 
 @app.route('/about')
 def about():

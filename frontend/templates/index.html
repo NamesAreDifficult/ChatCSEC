@@ -118,12 +118,68 @@
             margin-bottom: 4px;
             border-radius: 4px;
         }
+        .model-switcher {
+            position: absolute;
+            top: 60px; /* Adjust based on your layout needs */
+            left: 135px;
+            z-index: 100;
+        }
+
+        .model-switcher button {
+            background-color: #48a770; /* A nice shade of green */
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            font-size: 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            outline: none;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); /* Subtle shadow for depth */
+        }
+
+        .model-switcher button:hover {
+            background-color: #3e8e61; /* Darker shade on hover */
+        }
+
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: #f9f9f9;
+            min-width: 160px;
+            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+            z-index: 1;
+            border-radius: 5px; /* Rounded corners for the dropdown */
+            overflow: hidden; /* Ensures the rounded corners affect child elements */
+        }
+
+        .dropdown-content a {
+            color: black;
+            padding: 12px 16px;
+            text-decoration: none;
+            display: block;
+            transition: background-color 0.3s; /* Smooth transition for hover effect */
+        }
+
+        .dropdown-content a:hover {
+            background-color: #e7f4e4; /* Light green background on hover */
+        }
+        .dropdown-content.show {
+            display: block;  
+        }
     </style>
 </head>
 <body>
     <nav>
         <a href="/about">About</a>
     </nav>
+    <div class="model-switcher">
+        <button onclick="toggleDropdown()">Switch Model</button>
+        <div id="model-dropdown" class="dropdown-content">
+            <a href="#" onclick="switchModel('Model1')">Model1</a>
+            <a href="#" onclick="switchModel('Model2')">Model2</a>
+            <a href="#" onclick="switchModel('Model3')">Model3</a>
+        </div>
+    </div>
     <div id="chat-list">
         <button id="new-chat">Start New Chat</button>
     </div>
@@ -181,6 +237,38 @@
             $('.user_input').val('');
         });
     });
+</script>
+<script>
+    function toggleDropdown() {
+    document.getElementById("model-dropdown").classList.toggle("show");
+}
+
+window.onclick = function(event) {
+    if (!event.target.matches('.model-switcher button')) {
+        var dropdowns = document.getElementsByClassName("dropdown-content");
+        for (var i = 0; i < dropdowns.length; i++) {
+            var openDropdown = dropdowns[i];
+            if (openDropdown.classList.contains('show')) {
+                openDropdown.classList.remove('show');
+            }
+        }
+    }
+}
+
+function switchModel(modelName) {
+    $.ajax({
+        url: '/switch_model',  // Ensure you have this route defined in Flask
+        method: 'POST',
+        contentType: 'application/json',
+        data: JSON.stringify({ model: modelName }),
+        success: function(response) {
+            console.log("Model switched successfully: ", response);
+        },
+        error: function(error) {
+            console.error("Failed to switch model: ", error);
+        }
+    });
+}
 </script>
 </body>
 </html>
