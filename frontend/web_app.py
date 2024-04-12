@@ -27,6 +27,7 @@ def home():
                                                     chunkOverlap=0,
                                                     delimiter="\n"*50).values())[0]
 
+
             hydeResults = db.queryDB(hydeEmbedding, collectionNames=[collection_selection], maxHits=50)
             hydeResponse = model.prompt(hydeResults, prompt)
             return jsonify({'response': hydeResponse})
@@ -39,6 +40,7 @@ def home():
             promptResults = db.queryDB(promptEmbedding, collectionNames=[collection_selection], maxHits=50)
             promptResponse = model.prompt(promptResults, prompt)
             return jsonify({'response': promptResponse})
+
 
     return render_template('index.html')
 
