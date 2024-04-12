@@ -54,7 +54,7 @@ def switch_model():
     print(model_selection)
     return jsonify({'message': 'Model switched to ' + model_selection})
 
-collection_selection = "InitialTesting"
+collection_selection = "FakeReportsChunked"
 
 @app.route('/switch_collection', methods=['POST'])
 def switch_collection():
