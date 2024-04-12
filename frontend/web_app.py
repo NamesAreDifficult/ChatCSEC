@@ -27,7 +27,7 @@ def home():
                                                     chunkOverlap=0,
                                                     delimiter="\n"*50).values())[0]
 
-            hydeResults = db.queryDB(hydeEmbedding, collectionNames=["InitialTesting"], maxHits=50)
+            hydeResults = db.queryDB(hydeEmbedding, collectionNames=[collection_selection], maxHits=50)
             hydeResponse = model.prompt(hydeResults, prompt)
             return jsonify({'response': hydeResponse})
         else:
@@ -36,7 +36,7 @@ def home():
                                                     chunkOverlap=0,
                                                     delimiter="\n"*50).values())[0]
 
-            promptResults = db.queryDB(promptEmbedding, collectionNames=["CLITesting"], maxHits=50)
+            promptResults = db.queryDB(promptEmbedding, collectionNames=[collection_selection], maxHits=50)
             promptResponse = model.prompt(promptResults, prompt)
             return jsonify({'response': promptResponse})
 
@@ -49,7 +49,17 @@ def switch_model():
     global model_selection
     data = request.get_json()
     model_selection = data['model']
+    print(model_selection)
     return jsonify({'message': 'Model switched to ' + model_selection})
+
+collection_selection = "InitialTesting"
+
+@app.route('/switch_collection', methods=['POST'])
+def switch_collection():
+    global collection_selection
+    data = request.get_json()
+    collection_selection = data['collection']
+    return jsonify({'message': 'Collection switched to ' + collection_selection})
 
 @app.route('/about')
 def about():
