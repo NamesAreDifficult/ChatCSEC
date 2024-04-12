@@ -41,12 +41,12 @@
         }
     
         #chat-list div, #new-chat {
-            padding: 10px;
+            padding: 0px;
             margin-bottom: 10px;
             cursor: pointer;
             border-radius: 5px;
             transition: background-color 0.3s ease;
-            border: 1px solid #e7e7e7;
+            /* border: 1px solid #e7e7e7; */
         }
     
         #chat-list div:hover, #new-chat:hover {
@@ -57,7 +57,11 @@
             background-color: #48a770;
             color: white;
             border: none;
+            padding: 8px 10px;
+            font-size: 14px;
+            border-radius: 5px;
             cursor: pointer;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
         }
     
         /* Chat Display Styles */
@@ -132,8 +136,8 @@
             background-color: #48a770;
             color: white;
             border: none;
-            padding: 8px 16px;
-            font-size: 16px;
+            padding: 8px 10px;
+            font-size: 14px;
             border-radius: 5px;
             cursor: pointer;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
@@ -179,6 +183,12 @@
         .collection-switcher {
             top: 85px;
             left: 135px;
+        }
+        .model-switcher{
+            border: none;
+        }
+        .collection-switcher{
+            border: none;
         }
     </style>
 </head>
@@ -310,115 +320,5 @@
         }
         </script>
 
-<!-- <script>
-    $(document).ready(function(){
-        let chatCount = 0;
-        $('#new-chat').click(function() {
-            chatCount++;
-            const chatSelector = `<div class="chat-selector" data-chat-id="${chatCount}">Chat #${chatCount}</div>`;
-            $('#chat-list').append(chatSelector);
-
-            // Resetting the chat display to show the selected chat
-            $('#messages-container').empty();
-            $('#messages-container').append(`<div class="chat-box" id="chat-box-${chatCount}">
-                                                <div class="chat-response" id="response-${chatCount}">Chat #${chatCount} initiated</div>
-                                            </div>`);
-        });
-
-        $(document).on('submit', '#chat-form', function(e){
-            e.preventDefault();
-            const userInput = $(this).find('.user_input').val();
-
-            // Append user's question to the messages container
-            $('#messages-container').append(`<div class="user-question">You: ${userInput}</div>`);
-
-            // Sending userInput to the Flask backend
-            $.ajax({
-                url: '/',
-                method: 'POST',
-                contentType: 'application/json',
-                dataType: 'json', // Expecting JSON response
-                data: JSON.stringify({ user_input: userInput }), // Ensure this matches Flask's expected input
-                success: function(response) {
-                    // Handling the response from Flask and appending it to the messages container
-                    $('#messages-container').append(`<div class="ai-response">AI: ${response.response}</div>`);
-                },
-                error: function(xhr, status, error) {
-                    // Handling any error
-                    console.error("Error: " + status + " " + error);
-                }
-            });
-            
-            // Clear input after sending
-            $('.user_input').val('');
-        });
-    });
-</script>
-<script>
-    function toggleDropdown() {
-    document.getElementById("model-dropdown").classList.toggle("show");
-}
-
-window.onclick = function(event) {
-    if (!event.target.matches('.model-switcher button')) {
-        var dropdowns = document.getElementsByClassName("dropdown-content");
-        for (var i = 0; i < dropdowns.length; i++) {
-            var openDropdown = dropdowns[i];
-            if (openDropdown.classList.contains('show')) {
-                openDropdown.classList.remove('show');
-            }
-        }
-    }
-}
-
-function switchModel(modelName) {
-    $.ajax({
-        url: '/switch_model',  // Ensure you have this route defined in Flask
-        method: 'POST',
-        contentType: 'application/json',
-        data: JSON.stringify({ model: modelName }),
-        success: function(response) {
-            console.log("Model switched successfully: ", response);
-        },
-        error: function(error) {
-            console.error("Failed to switch model: ", error);
-        }
-    });
-}
-</script>
-<script>
-    function toggleCollectionDropdown() {
-    document.getElementById("collection-dropdown").classList.toggle("show");
-}
-
-function switchCollection(collectionName) {
-    console.log("Switching to collection:", collectionName);
-    $.ajax({
-        url: '/switch_collection',
-        method: 'POST',
-        contentType: 'application/json',
-        data: JSON.stringify({ collection: collectionName }),
-        success: function(response) {
-            alert('Collection switched to: ' + collectionName);
-        },
-        error: function(xhr, status, error) {
-            console.error("Failed to switch collection:", error);
-        }
-    });
-}
-
-// Close the dropdown if the user clicks outside of it
-window.onclick = function(event) {
-    if (!event.target.matches('.collection-switcher button')) {
-        var dropdowns = document.getElementsByClassName("dropdown-content");
-        for (var i = 0; i < dropdowns.length; i++) {
-            var openDropdown = dropdowns[i];
-            if (openDropdown.classList.contains('show')) {
-                openDropdown.classList.remove('show');
-            }
-        }
-    }
-}
-</script> -->
 </body>
 </html>
