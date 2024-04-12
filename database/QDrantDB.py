@@ -33,11 +33,14 @@ class QDrantDB(iDB):
         points = self.convertToPoints(texts)
         self.saveToCollection(collectionName, points)
 
+    def getCollectionNames(self) -> list[str]:
+        return [collection['name'] for collection in self.client.get_collections().dict()['collections']]
+
     def queryDB(self, embedding: list[float],
                 collectionNames: list[str]=None, maxHits: int=100, minSimilarity: float=0) -> list:
         results = []
         if not collectionNames:
-            collectionNames = [collection['name'] for collection in self.client.get_collections().dict()['collections']]
+            collectionNames = self.getCollectionNames()
 
         # TODO: make sure to only search collections of the proper size
         for collection in collectionNames:
@@ -48,3 +51,6 @@ class QDrantDB(iDB):
                                               ))
 
         return results
+
+
+

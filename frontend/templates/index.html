@@ -5,94 +5,102 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Chat with AI</title>
     <style>
+        /* Navigation Bar Styles */
         nav {
             width: 100%;
-            background-color: #48a770; /* Choose a color that fits your design */
+            background-color: #48a770; /* Consistent theme color */
             color: white;
             padding: 10px 20px;
             box-shadow: 0 2px 5px rgba(0,0,0,0.2);
             position: fixed;
             top: 0;
             left: 0;
-            z-index: 1000; /* Ensures nav is always on top */
+            z-index: 1000; /* Keeps navigation on top */
         }
+    
+        /* Body and Overall Layout Styles */
         body {
             margin: 0;
             display: flex;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background-color: #f4f7f6;
-            
-            padding-top: 50px;
+            padding-top: 50px; /* Offset for fixed navbar */
         }
-
+    
+        /* Chat List Styles */
         #chat-list {
+            position: fixed; /* Make chat list scroll independently */
             top: 50px;
-            flex: 0 0 250px; /* Fixed width */
-            background-color: #fff;
+            left: 0;
+            width: 250px;
+            height: calc(100vh - 50px); /* Adjust height considering nav bar */
             overflow-y: auto;
-            height: calc(100vh - 75px); /* Full viewport height */
+            background-color: #fff;
             padding: 10px;
-            /* padding-top: 0px; */
             box-shadow: 2px 0 5px rgba(0,0,0,0.1);
         }
-
+    
         #chat-list div, #new-chat {
-            padding: 10px;
+            padding: 0px;
             margin-bottom: 10px;
             cursor: pointer;
             border-radius: 5px;
             transition: background-color 0.3s ease;
-            border: 1px solid #e7e7e7;
+            /* border: 1px solid #e7e7e7; */
         }
-
+    
         #chat-list div:hover, #new-chat:hover {
             background-color: #e7f4e4;
         }
-
+    
         #new-chat {
             background-color: #48a770;
             color: white;
             border: none;
+            padding: 8px 10px;
+            font-size: 14px;
+            border-radius: 5px;
             cursor: pointer;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
         }
-
+    
+        /* Chat Display Styles */
         #chat-display {
             position: fixed;
             top: 50px;
             bottom: 0;
             right: 0;
-            left: 260px; /* Adjust based on the width of #chat-list */
+            left: 260px; /* Adjust to chat list width */
             display: flex;
             flex-direction: column;
             overflow: hidden;
-            padding: 10px;
-            box-sizing: border-box;
+            padding: 15px;
             background-color: white;
         }
-
+    
         #messages-container {
             overflow-y: auto;
-            margin-bottom: 10px;
             flex-grow: 1;
         }
-
+    
+        /* Chat Form Styles */
         .chat-form {
             display: flex;
             margin-top: 10px;
         }
-
+    
         .chat-form input, .chat-form button {
             height: 40px;
             padding: 0 10px;
         }
-
+    
         .chat-form input {
             flex-grow: 1;
             border: 1px solid #ccc;
             border-radius: 5px 0 0 5px;
             border-right: none;
         }
-
+    
         .chat-form button {
             background-color: #48a770;
             color: white;
@@ -101,22 +109,86 @@
             border-radius: 0 5px 5px 0;
             transition: background-color 0.3s ease;
         }
-
+    
         .chat-form button:hover {
             background-color: #3e8e61;
         }
-        .user-question {
-            background-color: #e7f4e4; /* Light background for user's question */
+    
+        /* Styles for User Questions and AI Responses */
+        .user-question, .ai-response {
+            background-color: #f0f0f0; /* Slightly different backgrounds */
             padding: 8px;
             margin-bottom: 4px;
             border-radius: 4px;
         }
-
-        .ai-response {
-            background-color: #f0f0f0; /* Slightly different background for AI response */
-            padding: 8px;
-            margin-bottom: 4px;
-            border-radius: 4px;
+    
+        .user-question {
+            background-color: #e7f4e4; /* Lighter background for questions */
+        }
+    
+        /* Common Switcher Styles */
+        .switcher {
+            /* position: absolute; */
+            z-index: 100;
+        }
+    
+        .switcher button {
+            background-color: #48a770;
+            color: white;
+            border: none;
+            padding: 8px 10px;
+            font-size: 14px;
+            border-radius: 5px;
+            cursor: pointer;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+    
+        .switcher button:hover {
+            background-color: #3e8e61;
+        }
+    
+        /* Dropdown Menu Styles */
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: #f9f9f9;
+            min-width: 160px;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+            border-radius: 5px;
+            overflow: hidden;
+        }
+    
+        .dropdown-content a {
+            color: black;
+            padding: 12px 16px;
+            text-decoration: none;
+            display: block;
+            transition: background-color 0.3s;
+        }
+    
+        .dropdown-content a:hover {
+            background-color: #e7f4e4;
+        }
+    
+        .dropdown-content.show {
+            display: block;
+        }
+    
+        /* Positioning of Switchers */
+        .model-switcher {
+            top: 10px;
+            left: 135px;
+        }
+    
+        .collection-switcher {
+            top: 85px;
+            left: 135px;
+        }
+        .model-switcher{
+            border: none;
+        }
+        .collection-switcher{
+            border: none;
         }
     </style>
 </head>
@@ -125,7 +197,25 @@
         <a href="/about">About</a>
     </nav>
     <div id="chat-list">
-        <button id="new-chat">Start New Chat</button>
+        <div class="controls-container">
+            <div class="model-switcher switcher">
+                <button onclick="toggleDropdown()">Switch Model</button>
+                <div id="model-dropdown" class="dropdown-content">
+                    <a href="#" onclick="switchModel('default')">Default</a>
+                    <a href="#" onclick="switchModel('HYDE')">HYDE</a>
+                    <a href="#" onclick="switchModel('Model3')">Model3</a>
+                </div>
+            </div>
+            <div class="collection-switcher switcher">
+                <button onclick="toggleCollectionDropdown()">Switch Collection</button>
+                <div id="collection-dropdown" class="dropdown-content">
+                    <a href="#" onclick="switchCollection('InitialTesting')">Initial Testing</a>
+                    <a href="#" onclick="switchCollection('CLITesting')">CLI Testing</a>
+                </div>
+            </div>
+            <button id="new-chat">Start New Chat</button>
+        </div>
+        <!-- Additional chat list items can be added here -->
     </div>
     <div id="chat-display">
         <div id="messages-container">
@@ -137,50 +227,98 @@
         </form>
     </div>
 
+
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-<script>
-    $(document).ready(function(){
-        let chatCount = 0;
-        $('#new-chat').click(function() {
-            chatCount++;
-            const chatSelector = `<div class="chat-selector" data-chat-id="${chatCount}">Chat #${chatCount}</div>`;
-            $('#chat-list').append(chatSelector);
-
-            // Resetting the chat display to show the selected chat
-            $('#messages-container').empty();
-            $('#messages-container').append(`<div class="chat-box" id="chat-box-${chatCount}">
-                                                <div class="chat-response" id="response-${chatCount}">Chat #${chatCount} initiated</div>
-                                            </div>`);
+    <script>
+        $(document).ready(function(){
+            let chatCount = 0;
+            $('#new-chat').click(function() {
+                chatCount++;
+                const chatSelector = `<div class="chat-selector" data-chat-id="${chatCount}">Chat #${chatCount}</div>`;
+                $('#chat-list').append(chatSelector);
+        
+                $('#messages-container').empty();
+                $('#messages-container').append(`<div class="chat-box" id="chat-box-${chatCount}">
+                                                    <div class="chat-response" id="response-${chatCount}">Chat #${chatCount} initiated</div>
+                                                </div>`);
+            });
+        
+            $(document).on('submit', '#chat-form', function(e){
+                e.preventDefault();
+                const userInput = $(this).find('.user_input').val();
+                $('#messages-container').append(`<div class="user-question">You: ${userInput}</div>`);
+                $.ajax({
+                    url: '/',
+                    method: 'POST',
+                    contentType: 'application/json',
+                    dataType: 'json',
+                    data: JSON.stringify({ user_input: userInput }),
+                    success: function(response) {
+                        $('#messages-container').append(`<div class="ai-response">AI: ${response.response}</div>`);
+                    },
+                    error: function(xhr, status, error) {
+                        console.error("Error: " + status + " " + error);
+                    }
+                });
+                $('.user_input').val('');
+            });
         });
-
-        $(document).on('submit', '#chat-form', function(e){
-            e.preventDefault();
-            const userInput = $(this).find('.user_input').val();
-
-            // Append user's question to the messages container
-            $('#messages-container').append(`<div class="user-question">You: ${userInput}</div>`);
-
-            // Sending userInput to the Flask backend
+        
+        function toggleDropdown() {
+            document.getElementById("model-dropdown").classList.toggle("show");
+        }
+        
+        function toggleCollectionDropdown() {
+            document.getElementById("collection-dropdown").classList.toggle("show");
+        }
+        
+        window.onclick = function(event) {
+            if (!event.target.matches('.model-switcher button')) {
+                var modelDropdowns = document.getElementById("model-dropdown");
+                if (modelDropdowns.classList.contains('show')) {
+                    modelDropdowns.classList.remove('show');
+                }
+            }
+            if (!event.target.matches('.collection-switcher button')) {
+                var collectionDropdowns = document.getElementById("collection-dropdown");
+                if (collectionDropdowns.classList.contains('show')) {
+                    collectionDropdowns.classList.remove('show');
+                }
+            }
+        }
+        
+        function switchModel(modelName) {
+            console.log("Switching to model:", modelName);
             $.ajax({
-                url: '/',
+                url: '/switch_model',
                 method: 'POST',
                 contentType: 'application/json',
-                dataType: 'json', // Expecting JSON response
-                data: JSON.stringify({ user_input: userInput }), // Ensure this matches Flask's expected input
+                data: JSON.stringify({ model: modelName }),
                 success: function(response) {
-                    // Handling the response from Flask and appending it to the messages container
-                    $('#messages-container').append(`<div class="ai-response">AI: ${response.response}</div>`);
+                    console.log("Model switched successfully: ", response);
                 },
-                error: function(xhr, status, error) {
-                    // Handling any error
-                    console.error("Error: " + status + " " + error);
+                error: function(error) {
+                    console.error("Failed to switch model: ", error);
                 }
             });
-            
-            // Clear input after sending
-            $('.user_input').val('');
-        });
-    });
-</script>
+        }
+        
+        function switchCollection(collectionName) {
+            console.log("Switching to collection:", collectionName);
+            $.ajax({
+                url: '/switch_collection',
+                method: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify({ collection: collectionName }),
+                success: function(response) {
+                    alert('Collection switched to: ' + collectionName);
+                },
+                error: function(xhr, status, error) {
+                    console.error("Failed to switch collection:", error);
+                }
+            });
+        }
+        </script>
+
 </body>
 </html>

@@ -20,17 +20,48 @@ def home():
         data = request.json
         prompt = data['user_input']
 
-        promptEmbedding = list(embed.createEmbedding(prompt,
-                                                 maxChunkSize=sys.maxsize,
-                                                 chunkOverlap=0,
-                                                 delimiter="\n"*50).values())[0]
+        if model_selection == 'HYDE':
+            hydeResponse = model.hydePrompt(prompt)
+            hydeEmbedding = list(embed.createEmbedding(hydeResponse,
+                                                    maxChunkSize=sys.maxsize,
+                                                    chunkOverlap=0,
+                                                    delimiter="\n"*50).values())[0]
 
-        promptResults = db.queryDB(promptEmbedding, collectionNames=["FakeReportsChunked"], maxHits=5)
-        promptResponse = model.prompt(promptResults, prompt)
 
-        # response = "This is where the AI response would go for: " + prompt
-        return jsonify({'response': promptResponse})
+            hydeResults = db.queryDB(hydeEmbedding, collectionNames=[collection_selection], maxHits=50)
+            hydeResponse = model.prompt(hydeResults, prompt)
+            return jsonify({'response': hydeResponse})
+        else:
+            promptEmbedding = list(embed.createEmbedding(prompt,
+                                                    maxChunkSize=sys.maxsize,
+                                                    chunkOverlap=0,
+                                                    delimiter="\n"*50).values())[0]
+
+            promptResults = db.queryDB(promptEmbedding, collectionNames=[collection_selection], maxHits=50)
+            promptResponse = model.prompt(promptResults, prompt)
+            return jsonify({'response': promptResponse})
+
+
     return render_template('index.html')
+
+model_selection = 'defualt'
+
+@app.route('/switch_model', methods=['POST'])
+def switch_model():
+    global model_selection
+    data = request.get_json()
+    model_selection = data['model']
+    print(model_selection)
+    return jsonify({'message': 'Model switched to ' + model_selection})
+
+collection_selection = "InitialTesting"
+
+@app.route('/switch_collection', methods=['POST'])
+def switch_collection():
+    global collection_selection
+    data = request.get_json()
+    collection_selection = data['collection']
+    return jsonify({'message': 'Collection switched to ' + collection_selection})
 
 @app.route('/about')
 def about():

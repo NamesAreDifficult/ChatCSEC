@@ -14,3 +14,7 @@ class iDB(ABC):
     def queryDB(self, embedding: list[float],
                 collectionNames: list[str]=None, maxHits: int=100, minSimilarity: float=0) -> list:
         pass
+
+    @abstractmethod
+    def getCollectionNames(self):
+        pass
